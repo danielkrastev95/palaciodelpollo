@@ -475,38 +475,48 @@ body::after {
     "name  price img"
     "desc  price img";
 }
-.menu-row-img {
+.menu-row--img > button {
   grid-area: img;
+  align-self: center;
+}
+.menu-row-img {
   width: 88px; height: 88px;
   object-fit: cover;
   border-radius: 2px;
   filter: saturate(0.9) contrast(1.05);
-  align-self: center;
 }
 @media (max-width: 820px) {
   .menu-row--img { grid-template-columns: 1fr auto 72px; }
   .menu-row-img  { width: 72px; height: 72px; }
 }
 @media (max-width: 600px) {
-  /* En móvil pequeño: nombre/desc/precio en columna izquierda, imagen centrada
-     verticalmente respecto al bloque completo (no pegada arriba). */
+  /* Móvil: imagen pequeña a la derecha, centrada contra nombre+precio.
+     Descripción ocupa todo el ancho debajo. Layout compacto. */
   .menu-row--img {
-    grid-template-columns: 1fr 72px;
+    grid-template-columns: 1fr 64px;
     grid-template-areas:
       "name  img"
-      "desc  img"
-      "price img";
-    column-gap: 14px;
+      "price img"
+      "desc  desc";
+    column-gap: 12px;
+    row-gap: 2px;
+  }
+  .menu-row--img > button {
+    grid-area: img;
+    align-self: center;
   }
   .menu-row-img {
-    width: 72px;
-    height: 72px;
-    align-self: center;
+    width: 64px;
+    height: 64px;
   }
   .menu-row--img .menu-row-price {
     text-align: left;
     font-size: 18px;
-    padding-top: 4px;
+    padding-top: 2px;
+    align-self: start;
+  }
+  .menu-row--img .menu-row-desc {
+    margin-top: 4px;
   }
 }
 .menu-tag {

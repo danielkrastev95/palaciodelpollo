@@ -177,7 +177,7 @@ function MenuRow({ name, desc, price, featured, image, onImageClick, imgBtnRef }
             alt=""
             aria-hidden="true"
             width={88}
-            height={66}
+            height={88}
             sizes="88px"
             unoptimized={!isOwnImage(image)}
             style={{ objectFit: "cover", display: "block" }}
