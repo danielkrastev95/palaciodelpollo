@@ -488,17 +488,21 @@ body::after {
   .menu-row-img  { width: 72px; height: 72px; }
 }
 @media (max-width: 600px) {
-  /* En móvil pequeño: imagen pegada a la derecha ocupando toda la altura del row,
-     precio bajo el nombre/desc para evitar que quede "flotando" entre texto e imagen. */
+  /* En móvil pequeño: nombre/desc/precio en columna izquierda, imagen centrada
+     verticalmente respecto al bloque completo (no pegada arriba). */
   .menu-row--img {
-    grid-template-columns: 1fr 64px;
+    grid-template-columns: 1fr 72px;
     grid-template-areas:
       "name  img"
       "desc  img"
       "price img";
     column-gap: 14px;
   }
-  .menu-row-img { width: 64px; height: 64px; align-self: start; margin-top: 4px; }
+  .menu-row-img {
+    width: 72px;
+    height: 72px;
+    align-self: center;
+  }
   .menu-row--img .menu-row-price {
     text-align: left;
     font-size: 18px;
