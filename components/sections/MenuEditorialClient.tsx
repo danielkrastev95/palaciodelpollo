@@ -68,10 +68,11 @@ function Lightbox({ src, name, desc, price, onClose, triggerRef }: {
       }
     }
     document.addEventListener("keydown", onKey)
+    const trigger = triggerRef?.current
     return () => {
       document.removeEventListener("keydown", onKey)
       // Devuelve el foco al botón que abrió el lightbox
-      triggerRef?.current?.focus()
+      trigger?.focus()
     }
   }, [onClose, triggerRef])
 

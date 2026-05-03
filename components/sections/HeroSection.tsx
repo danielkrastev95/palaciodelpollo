@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -31,14 +30,6 @@ function Embers() {
 }
 
 export default function HeroSection() {
-  const [date, setDate] = useState("")
-
-  useEffect(() => {
-    const d = new Date()
-    const fmt = d.toLocaleDateString("es-ES", { weekday: "long", day: "2-digit", month: "long" })
-    setDate(fmt.toUpperCase())
-  }, [])
-
   return (
     <section className="hero">
       <div className="container">
