@@ -124,7 +124,7 @@ export default function RootLayout({
     >
       <body>
         {/* Anti-flash: aplica dark antes de que React hidrate */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(!t&&d))document.body.classList.add('dark');}catch(e){}})()` }} />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');}catch(e){}})()` }} />
         {/* JSON-LD: datos estructurados para Google (rich snippets de restaurante) */}
         <script
           type="application/ld+json"

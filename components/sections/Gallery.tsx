@@ -45,44 +45,39 @@ export default function Gallery() {
           {/* g-d: ink price */}
           <div className="gallery-tile ink g-d">
             <span className="big"><em>11,90€</em></span>
-            <span style={{ position: "absolute", top: 14, left: 14, color: "var(--gold-2)" }}>
+            <span className="tile-corner-label" style={{ color: "var(--gold-2)" }}>
               POLLO ENTERO + PATATAS
             </span>
           </div>
 
           {/* g-e: text lema */}
-          <div className="gallery-tile g-e" style={{ alignItems: "flex-start" }}>
-            <div style={{ paddingTop: 10 }}>
-              <div style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic",
-                fontSize: 52, lineHeight: 0.95, color: "var(--ink)", letterSpacing: "-0.02em",
-              }}>
-                «La mejor<br />comida es la<br />que hacían en<br /><em style={{ color: "var(--ember)" }}>casa de tu<br />abuela.»</em>
+          <div className="gallery-tile g-e">
+            <div className="tile-quote-wrap">
+              <div className="tile-quote">
+                «La mejor<br />comida es la<br />que hacían en<br /><em>casa de tu<br />abuela.»</em>
               </div>
-              <div className="mono" style={{ color: "var(--ink-3)", marginTop: 18 }}>— LEMA DE LA CASA</div>
+              <div className="mono tile-quote-attr">— LEMA DE LA CASA</div>
             </div>
           </div>
 
           {/* g-f: gold ticket */}
           <div className="gallery-tile gold g-f">
             <span className="big">15€</span>
-            <span style={{ position: "absolute", top: 14, left: 14 }}>TICKET MEDIO</span>
+            <span className="tile-corner-label">TICKET MEDIO</span>
           </div>
 
           {/* g-g: paper-3 tagline */}
-          <div className="gallery-tile g-g" style={{ background: "var(--paper-3)" }}>
-            <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 32, color: "var(--ink)" }}>
-              Casero · <span className="serif" style={{ fontSize: 18, color: "var(--ink-3)" }}>rápido</span> · para todos los días
+          <div className="gallery-tile g-g tile-tagline-wrap">
+            <span className="tile-tagline">
+              Casero · <span className="tile-tagline-sub">rápido</span> · para todos los días
             </span>
           </div>
 
           {/* g-h: ink CTA */}
-          <div className="gallery-tile g-h" style={{ background: "var(--ink)", color: "var(--paper)", borderColor: "var(--ink)" }}>
+          <div className="gallery-tile g-h tile-cta-wrap">
             <div>
-              <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 28, color: "var(--paper)", lineHeight: 1 }}>
-                Llama y encarga.
-              </div>
-              <div className="mono" style={{ color: "var(--gold-2)", marginTop: 8 }}>+34 918 95 32 16</div>
+              <div className="tile-cta-title">Llama y encarga.</div>
+              <div className="mono tile-cta-phone">+34 918 95 32 16</div>
             </div>
           </div>
         </div>
