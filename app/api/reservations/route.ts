@@ -8,6 +8,7 @@ import { z } from "zod"
 import { createServerSupabaseClient } from "@/lib/supabase"
 import { sendEmail, tplNuevaReserva, tplReciboReserva } from "@/lib/email"
 import { checkRateLimit, getIP } from "@/lib/rate-limit"
+import { isSlotBookable } from "@/lib/calendar"
 
 const VALID_TIMES = ["12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30"] as const
 
@@ -48,6 +49,14 @@ export async function POST(req: NextRequest) {
     const todayStr = new Date().toISOString().slice(0, 10)
     if (data.date < todayStr) {
       return NextResponse.json({ success: false, error: "Fecha no válida" }, { status: 400 })
+    }
+
+    // Hora ya pasada o dentro del margen de antelación (1h)
+    if (!isSlotBookable(data.date, data.time)) {
+      return NextResponse.json(
+        { success: false, error: "Esa hora ya no admite reservas. Elige otra franja." },
+        { status: 400 },
+      )
     }
 
     // ── Inserción ────────────────────────────────────────────────
