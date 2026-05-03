@@ -2,7 +2,7 @@
 
 import { useReducer, useCallback, useMemo, memo } from "react"
 import Link from "next/link"
-import { TIMES, toDateString, buildCalendarCells, buildToday } from "@/lib/calendar"
+import { TIMES, toDateString, buildCalendarCells, buildToday, isSlotBookable } from "@/lib/calendar"
 import { nameErr, phoneErr, emailErr } from "@/lib/validators"
 import FieldError from "@/components/ui/FieldError"
 import CalendarWidget from "@/components/ui/CalendarWidget"
@@ -333,6 +333,7 @@ const TimeSlot = memo(function TimeSlot({ time, state, remaining, selected, onSe
 
 interface TimeSlotsGridProps {
   selectedDay: number | null
+  selectedDateStr: string | null
   selectedTime: string | null
   loadingSlots: boolean
   availability: Record<string, number>
@@ -341,6 +342,7 @@ interface TimeSlotsGridProps {
 
 const TimeSlotsGrid = memo(function TimeSlotsGrid({
   selectedDay,
+  selectedDateStr,
   selectedTime,
   loadingSlots,
   availability,
@@ -349,14 +351,24 @@ const TimeSlotsGrid = memo(function TimeSlotsGrid({
   const getSlotInfo = useCallback(
     (time: string): { state: SlotState; remaining: number } => {
       if (!selectedDay || loadingSlots) return { state: "disabled", remaining: TOTAL_TABLES }
+      // Hora ya pasada o dentro del margen de antelación
+      if (selectedDateStr && !isSlotBookable(selectedDateStr, time)) {
+        return { state: "disabled", remaining: 0 }
+      }
       const taken = availability[time] ?? 0
       const remaining = Math.max(0, TOTAL_TABLES - taken)
       if (remaining === 0) return { state: "soldout", remaining: 0 }
       if (remaining <= LOW_THRESHOLD) return { state: "low", remaining }
       return { state: "available", remaining }
     },
-    [selectedDay, loadingSlots, availability]
+    [selectedDay, selectedDateStr, loadingSlots, availability]
   )
+
+  // ¿Día seleccionado pero ningún slot reservable por hora? (típico: hoy por la tarde)
+  const allSlotsPast = useMemo(() => {
+    if (!selectedDay || !selectedDateStr || loadingSlots) return false
+    return TIMES.every((t) => !isSlotBookable(selectedDateStr, t))
+  }, [selectedDay, selectedDateStr, loadingSlots])
 
   return (
     <div className="res-field">
@@ -388,6 +400,20 @@ const TimeSlotsGrid = memo(function TimeSlotsGrid({
           )
         })}
       </div>
+      {allSlotsPast && (
+        <p
+          role="status"
+          style={{
+            marginTop: 10,
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "var(--ember)",
+            fontStyle: "italic",
+          }}
+        >
+          Hoy ya no admitimos reservas. Elige otro día en el calendario.
+        </p>
+      )}
     </div>
   )
 })
@@ -608,6 +634,11 @@ export default function ReservationSection() {
     [y, m, state.selectedDay]
   )
 
+  const selectedDateStr = useMemo(
+    () => (state.selectedDay ? toDateString(y, m, state.selectedDay) : null),
+    [y, m, state.selectedDay]
+  )
+
   const errors = useMemo(
     () => ({
       name: nameErr(state.name),
@@ -768,6 +799,7 @@ export default function ReservationSection() {
 
                     <TimeSlotsGrid
                       selectedDay={state.selectedDay}
+                      selectedDateStr={selectedDateStr}
                       selectedTime={state.selectedTime}
                       loadingSlots={state.loadingSlots}
                       availability={state.availability}

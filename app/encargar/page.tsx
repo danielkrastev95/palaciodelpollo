@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { MENU_DATA } from "@/lib/content"
-import { TIMES, toDateString, buildCalendarCells, buildToday } from "@/lib/calendar"
+import { TIMES, toDateString, buildCalendarCells, buildToday, isSlotBookable } from "@/lib/calendar"
 import { nameErr, phoneErr, emailErr } from "@/lib/validators"
 import FieldError from "@/components/ui/FieldError"
 import CalendarWidget from "@/components/ui/CalendarWidget"
@@ -390,15 +390,38 @@ export default function EncargarPage() {
                   <div style={{ marginBottom: 14 }}>
                     <label className="res-label">Hora de recogida</label>
                     <div className="times" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-                      {TIMES.map(t => (
-                        <button
-                          key={t}
-                          className={`time-btn ${selectedTime === t ? "active" : ""} ${!selectedDay ? "disabled" : ""}`}
-                          disabled={!selectedDay}
-                          onClick={() => setSelectedTime(t)}
-                        >{t}</button>
-                      ))}
+                      {TIMES.map(t => {
+                        const dateStr = selectedDay ? toDateString(y, m, selectedDay) : null
+                        const past = dateStr ? !isSlotBookable(dateStr, t) : false
+                        const disabled = !selectedDay || past
+                        return (
+                          <button
+                            key={t}
+                            className={`time-btn ${selectedTime === t ? "active" : ""} ${disabled ? "disabled" : ""}`}
+                            disabled={disabled}
+                            onClick={() => !disabled && setSelectedTime(t)}
+                          >{t}</button>
+                        )
+                      })}
                     </div>
+                    {selectedDay && (() => {
+                      const dateStr = toDateString(y, m, selectedDay)
+                      const allPast = TIMES.every(t => !isSlotBookable(dateStr, t))
+                      return allPast ? (
+                        <p
+                          role="status"
+                          style={{
+                            marginTop: 8,
+                            fontFamily: "var(--font-body)",
+                            fontSize: 14,
+                            color: "var(--ember)",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          Hoy ya no admitimos encargos. Elige otro día.
+                        </p>
+                      ) : null
+                    })()}
                   </div>
 
                   {/* Nombre */}

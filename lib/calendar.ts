@@ -31,3 +31,28 @@ export function buildToday(): Date {
   const now = new Date()
   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
+
+/** Antelación mínima (ms) para reservar/encargar. Permite preparación en cocina. */
+export const BOOKING_LEAD_MS = 60 * 60 * 1000  // 1 hora
+
+/**
+ * ¿Se puede reservar este slot? Devuelve false si la hora ya pasó o
+ * está dentro del margen de antelación (BOOKING_LEAD_MS).
+ *
+ * @param dateStr "YYYY-MM-DD"
+ * @param time    "HH:MM"
+ * @param now     fecha actual (inyectable para tests)
+ */
+export function isSlotBookable(dateStr: string, time: string, now: Date = new Date()): boolean {
+  const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr)
+  const timeMatch = /^(\d{2}):(\d{2})$/.exec(time)
+  if (!dateMatch || !timeMatch) return false
+
+  const [, ys, ms, ds] = dateMatch
+  const [, hs, mins]   = timeMatch
+  const slotDate = new Date(
+    Number(ys), Number(ms) - 1, Number(ds),
+    Number(hs), Number(mins), 0, 0,
+  )
+  return slotDate.getTime() - now.getTime() >= BOOKING_LEAD_MS
+}
