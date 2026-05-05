@@ -122,7 +122,7 @@ export default function RootLayout({
       lang="es"
       className={`${bodoni.variable} ${instrument.variable} ${inter.variable} ${jetbrains.variable}`}
     >
-      <body>
+      <body suppressHydrationWarning>
         {/* Anti-flash: aplica dark antes de que React hidrate */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');}catch(e){}})()` }} />
         {/* JSON-LD: datos estructurados para Google (rich snippets de restaurante) */}
