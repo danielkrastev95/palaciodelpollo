@@ -12,7 +12,8 @@ const links = [
 ]
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
+  const [open,    setOpen]    = useState(false)
+  const [instant, setInstant] = useState(false)  // cierre sin animación (al navegar)
   const panelRef        = useRef<HTMLDivElement>(null)
   const toggleRef       = useRef<HTMLButtonElement>(null)
 
@@ -48,10 +49,21 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", onKey)
   }, [open])
 
+  // Cerrar siempre es instantáneo en móvil — la animación es solo para abrir.
   const close = () => {
+    setInstant(true)
     setOpen(false)
     toggleRef.current?.focus()
   }
+  const closeFromLink = () => {
+    setInstant(true)
+    setOpen(false)
+  }
+
+  // Reset modo instant al reabrir
+  useEffect(() => {
+    if (open) setInstant(false)
+  }, [open])
 
   return (
     <>
@@ -102,33 +114,51 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Menú de navegación"
-        className={`nav-mobile-panel ${open ? "open" : ""}`}
-        style={{ zIndex: 999 }}
+        className={`nav-mobile-panel ${open ? "open" : ""} ${instant ? "instant" : ""}`}
       >
-        <button
-          aria-label="Cerrar menú"
-          style={{
-            position: "absolute", top: 20, right: 20,
-            fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.22em",
-            textTransform: "uppercase", color: "var(--ink-3)",
-          }}
-          onClick={close}
-        >
-          Cerrar ×
-        </button>
-        {links.map((l) => (
-          <Link key={l.href} href={l.href} onClick={close}>
-            {l.label}
-          </Link>
-        ))}
+        <div className="nav-mobile-header">
+          <span className="nav-mobile-brand">
+            <span className="dot" /> El Palacio <em>del</em> Pollo
+          </span>
+          <button
+            className="nav-mobile-close"
+            aria-label="Cerrar menú"
+            onClick={close}
+          >
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <path d="M3 3l16 16M19 3L3 19" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="nav-mobile-label">Cap. I · Navegación</div>
+
+        <nav className="nav-mobile-links" aria-label="Enlaces principales">
+          {links.map((l, i) => (
+            <Link key={l.href} href={l.href} onClick={closeFromLink}>
+              <span className="nav-mobile-num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="nav-mobile-label-link">{l.label}</span>
+              <span className="nav-mobile-arrow" aria-hidden="true">→</span>
+            </Link>
+          ))}
+        </nav>
+
         <a
           href="tel:+34918953216"
-          className="btn ember"
-          style={{ alignSelf: "flex-start", marginTop: 8 }}
-          onClick={close}
+          className="nav-mobile-phone"
+          onClick={closeFromLink}
+          aria-label="Llamar al restaurante"
         >
-          Llamar · +34 918 95 32 16
+          <span className="nav-mobile-phone-icon" aria-hidden="true">☎</span>
+          <span className="nav-mobile-phone-num">+34 918 95 32 16</span>
         </a>
+
+        <div className="nav-mobile-footer">
+          <div>
+            <span className="nav-mobile-foot-label">Dirección</span>
+            <span className="nav-mobile-foot-val">Calle Pozo Chico 30 · Valdemoro</span>
+          </div>
+        </div>
       </div>
     </>
   )

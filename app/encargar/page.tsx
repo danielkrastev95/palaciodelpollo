@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { MENU_DATA } from "@/lib/content"
@@ -56,6 +56,12 @@ export default function EncargarPage() {
   const m     = viewMonth.getMonth()
   const today = buildToday()
   const cells = buildCalendarCells(y, m)
+
+  /* Scroll al carrito (desde el FAB flotante) */
+  const cartRef = useRef<HTMLDivElement>(null)
+  const scrollToCart = () => {
+    cartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
 
   /* ── Persistir carrito en localStorage ── */
   useEffect(() => {
@@ -265,10 +271,12 @@ export default function EncargarPage() {
                     return (
                       <div key={item.id} className="order-item">
                         {/* Info */}
-                        <div style={{ flex: 1, minWidth: 0 }}>
+                        <div className="order-item-info">
                           <div style={{
-                            fontFamily: "var(--font-body)", fontStyle: "italic",
-                            fontSize: 17, color: "var(--ink)", lineHeight: 1.25,
+                            fontFamily: "var(--font-display)",
+                            fontSize: 19, fontWeight: 400,
+                            letterSpacing: "-0.01em",
+                            color: "var(--ink)", lineHeight: 1.25,
                           }}>
                             {item.name}
                           </div>
@@ -283,16 +291,15 @@ export default function EncargarPage() {
                         </div>
 
                         {/* Precio */}
-                        <div style={{
+                        <div className="order-item-price" style={{
                           fontFamily: "var(--font-display)", fontStyle: "italic",
                           fontSize: 17, color: "var(--ink)",
-                          whiteSpace: "nowrap", minWidth: 58, textAlign: "right",
                         }}>
                           {euros(item.price)}
                         </div>
 
                         {/* Controles de cantidad */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 88 }}>
+                        <div className="order-item-qty">
                           <button
                             className="qty-btn"
                             onClick={() => removeItem(item.id)}
@@ -319,13 +326,8 @@ export default function EncargarPage() {
           </div>
 
           {/* ══ DERECHA: Carrito + Formulario ══ */}
-          <div className="order-sidebar">
-            <div style={{
-              background: "var(--cream)",
-              border: "1px solid var(--ink)",
-              borderRadius: 2,
-              overflow: "hidden",
-            }}>
+          <div className="order-sidebar" ref={cartRef}>
+            <div className="order-cart-panel">
               {/* Cabecera del carrito */}
               <div style={{
                 padding: "13px 20px",
@@ -349,25 +351,36 @@ export default function EncargarPage() {
 
                 {/* Lista del carrito */}
                 {cartItems.length === 0 ? (
-                  <p className="order-empty">Añade platos desde la carta.</p>
+                  <p className="order-empty">Aún no has añadido nada.<br />Empieza por la carta.</p>
                 ) : (
                   <div style={{ marginBottom: 16 }}>
                     {cartItems.map(item => (
                       <div key={item.id} className="cart-line">
-                        <span className="serif" style={{ fontSize: 14, color: "var(--ink)", flex: 1, minWidth: 0 }}>
-                          <span className="mono" style={{ fontSize: 10, color: "var(--ember)", marginRight: 4 }}>{cart[item.id]}×</span>
-                          {item.name}
-                        </span>
-                        <span className="mono" style={{ fontSize: 11, color: "var(--ink)", whiteSpace: "nowrap" }}>
+                        <div className="cart-line-info">
+                          <div className="cart-line-name">{item.name}</div>
+                          <div className="cart-line-unit">{euros(item.price)} · ud.</div>
+                        </div>
+                        <div className="cart-line-controls">
+                          <button
+                            className="qty-btn qty-btn-sm"
+                            onClick={() => removeItem(item.id)}
+                            aria-label={`Quitar ${item.name}`}
+                          >−</button>
+                          <span className="qty-num" style={{ color: "var(--ember)" }}>{cart[item.id]}</span>
+                          <button
+                            className="qty-btn qty-btn-sm add"
+                            onClick={() => addItem(item.id)}
+                            aria-label={`Añadir ${item.name}`}
+                          >+</button>
+                        </div>
+                        <div className="cart-line-subtotal">
                           {euros(item.price * cart[item.id])}
-                        </span>
+                        </div>
                       </div>
                     ))}
                     <div className="order-total">
-                      <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 19 }}>Total estimado</span>
-                      <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 19, color: "var(--ember)" }}>
-                        {euros(cartTotal)}
-                      </span>
+                      <span className="order-total-label">Total estimado</span>
+                      <span className="order-total-value">{euros(cartTotal)}</span>
                     </div>
                   </div>
                 )}
@@ -535,6 +548,30 @@ export default function EncargarPage() {
 
         </div>
       </div>
+
+      {/* FAB carrito flotante */}
+      {cartCount > 0 && (
+        <button
+          type="button"
+          onClick={scrollToCart}
+          className="cart-fab"
+          aria-label={`Ver pedido — ${cartCount} ${cartCount === 1 ? "plato" : "platos"}, total ${euros(cartTotal)}`}
+        >
+          <span className="cart-fab-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 4h2l2.5 12.5a2 2 0 0 0 2 1.5h7a2 2 0 0 0 2-1.5L21 8H6" />
+              <circle cx="9" cy="20" r="1.4" />
+              <circle cx="17" cy="20" r="1.4" />
+            </svg>
+            <span className="cart-fab-count">{cartCount}</span>
+          </span>
+          <span className="cart-fab-text">
+            <span className="cart-fab-label">Ver pedido</span>
+            <span className="cart-fab-total">{euros(cartTotal)}</span>
+          </span>
+          <span className="cart-fab-arrow" aria-hidden="true">↓</span>
+        </button>
+      )}
     </>
   )
 }
