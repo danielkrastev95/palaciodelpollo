@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
-import { supabase } from "@/lib/supabase"
+import { supabase, isOwnImage } from "@/lib/supabase"
 import { MENU_DATA } from "@/lib/content"
 
 /* ── Tipos Supabase ── */
@@ -138,11 +138,6 @@ function Lightbox({ src, name, desc, price, onClose, triggerRef }: {
     </div>
   )
 }
-
-// Imágenes de Supabase → optimizadas por Next.js (AVIF/WebP)
-// Imágenes externas temporales → unoptimized (sin validación de hostname)
-const isOwnImage = (url: string) =>
-  !url.startsWith("http") || url.includes("gpltodrwtebhbkvgcnhw.supabase.co")
 
 function MenuRow({ name, desc, price, featured, image, onImageClick, imgBtnRef }: MenuItem & {
   onImageClick?: () => void
