@@ -77,10 +77,6 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  // viewport-fit: cover → la web ocupa toda la pantalla en iPhones con notch.
-  // Compensamos el safe-area-inset-top en la navbar para que su fondo
-  // cubra la zona del status bar y no se vea contenido translúcido detrás.
-  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#F3EDE1" },
     { media: "(prefers-color-scheme: dark)",  color: "#1A1410" },
