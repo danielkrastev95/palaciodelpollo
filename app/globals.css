@@ -54,8 +54,10 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   min-height: 100vh;
+  /* Nota: NO uses overflow-x: hidden aquí. Rompe position: sticky en iOS
+     Safari (la navbar deja de pegarse al top). Si aparece scroll lateral,
+     arregla el componente que desborda en lugar de ocultarlo aquí. */
 }
 img { max-width: 100%; display: block; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
