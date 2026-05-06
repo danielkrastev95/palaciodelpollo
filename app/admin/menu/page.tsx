@@ -5,6 +5,7 @@ import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { MenuItem, Category } from "@/types/database"
 import { ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Star } from "lucide-react"
+import ImageUpload from "@/app/admin/_shared/ImageUpload"
 
 const A = "#C94B1F"
 const INK = "#1A1410"
@@ -156,7 +157,7 @@ export default function AdminMenuPage() {
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} style={{ ...inputStyle, resize: "none" }} />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr", gap: 20, marginBottom: 20 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
                 <div>
                   <label style={labelStyle}>Precio (€) *</label>
                   <input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} style={inputStyle} />
@@ -165,10 +166,14 @@ export default function AdminMenuPage() {
                   <label style={labelStyle}>Orden</label>
                   <input type="number" value={form.display_order} onChange={e => setForm({ ...form, display_order: e.target.value })} style={inputStyle} />
                 </div>
-                <div>
-                  <label style={labelStyle}>URL Imagen</label>
-                  <input type="url" value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} placeholder="https://…" style={inputStyle} />
-                </div>
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label style={labelStyle}>Imagen</label>
+                <ImageUpload
+                  value={form.image_url}
+                  onChange={url => setForm({ ...form, image_url: url })}
+                />
               </div>
 
               <div style={{ display: "flex", gap: 24, marginBottom: 28 }}>
