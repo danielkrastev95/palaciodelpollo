@@ -135,7 +135,10 @@ body::after {
   position: sticky; top: 0; z-index: 100;
   background: var(--paper);
   border-bottom: 1px solid var(--ink);
-  padding: 16px 0;
+  /* padding-top extiende el fondo de la navbar dentro del safe-area-inset
+     del iPhone (notch / status bar). En navegadores sin safe area el env()
+     devuelve 0 y queda igual que padding 16px. */
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 0 16px;
   transition: padding .25s ease;
 }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
