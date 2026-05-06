@@ -27,3 +27,19 @@ export const createServerSupabaseClient = () => {
   }
   return createClient<Database>(supabaseUrl, serviceKey)
 }
+
+// Hostname del bucket de Supabase Storage (deriva del env, no hardcoded)
+export const SUPABASE_STORAGE_HOSTNAME = (() => {
+  try { return supabaseUrl ? new URL(supabaseUrl).hostname : null } catch { return null }
+})()
+
+/**
+ * ¿Está esta URL servida desde nuestro bucket de Supabase Storage?
+ * Las imágenes propias pasan por la optimización de Next.js Image.
+ * Las externas (Unsplash, etc.) se sirven con `unoptimized` para evitar
+ * añadir cada dominio en next.config.
+ */
+export const isOwnImage = (url: string): boolean => {
+  if (!url.startsWith("http")) return true  // ruta relativa local
+  return SUPABASE_STORAGE_HOSTNAME ? url.includes(SUPABASE_STORAGE_HOSTNAME) : false
+}

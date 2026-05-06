@@ -19,12 +19,19 @@ const securityHeaders = [
   { key: "X-XSS-Protection",         value: "1; mode=block" },
 ]
 
+// Hostname de Supabase Storage derivado del env. Si migran a otro proyecto
+// Supabase, basta con cambiar NEXT_PUBLIC_SUPABASE_URL.
+const supabaseHostname = (() => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  try { return url ? new URL(url).hostname : null } catch { return null }
+})()
+
 const nextConfig: NextConfig = {
   images: {
     // Solo dominios reales — no wildcards
-    remotePatterns: [
-      { protocol: "https", hostname: "gpltodrwtebhbkvgcnhw.supabase.co" },
-    ],
+    remotePatterns: supabaseHostname
+      ? [{ protocol: "https", hostname: supabaseHostname }]
+      : [],
     // AVIF primero (30-50% más pequeño que WebP), WebP como fallback
     formats: ["image/avif", "image/webp"],
   },
