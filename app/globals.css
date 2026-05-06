@@ -1,7 +1,27 @@
 @import "tailwindcss";
 
 /* =========================================================
-   EL PALACIO DEL POLLO — editorial restaurant site
+   EL PALACIO DEL POLLO — estilos globales
+   -----------------------------------------------------------
+   Estructura del archivo:
+     1. Tokens (CSS vars: paleta + tipografías)
+     2. Reset, base y texturas
+     3. Utilidades de tipografía y layout (container, btn, rule, stamp)
+     4. Componentes — Nav (desktop + mobile panel)
+     5. Componentes — Hero
+     6. Componentes — Capítulos / títulos de sección
+     7. Componentes — Ritual
+     8. Componentes — Menu (carta editorial)
+     9. Componentes — Reservation (bloque oscuro + tarjeta)
+    10. Componentes — Voices (testimonios)
+    11. Componentes — Gallery (sensorial grid)
+    12. Componentes — Footer
+    13. Componentes — Rotisserie (canvas scroll-scrubbed)
+    14. Componentes — Lightbox (animaciones)
+    15. Componentes — Cookie Consent
+    16. Página /encargar (layout + cart line + FAB liquid glass)
+    17. Utilidades de scroll, scrollbar, accesibilidad
+    18. Modo noche (dark mode overrides)
    ========================================================= */
 
 :root {
@@ -86,8 +106,6 @@ body::after {
   background: transparent;
   position: relative;
 }
-.stamp.ember { border-color: var(--ember); color: var(--ember); }
-
 /* ------- button ------- */
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
@@ -438,14 +456,6 @@ body.dark .nav-mobile-links a { border-bottom-color: rgba(243,237,225,0.13); }
   border-bottom: 1px solid var(--ink);
   overflow: hidden;
 }
-.hero-top {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 30px;
-  font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--ink-2);
-}
-.hero-top .col { max-width: 200px; line-height: 1.7; }
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -759,23 +769,14 @@ body.dark .nav-mobile-links a { border-bottom-color: rgba(243,237,225,0.13); }
     column-gap: 12px;
     row-gap: 2px;
   }
-  .menu-row--img > button {
-    grid-area: img;
-    align-self: center;
-  }
-  .menu-row-img {
-    width: 64px;
-    height: 64px;
-  }
+  .menu-row-img { width: 64px; height: 64px; }
   .menu-row--img .menu-row-price {
     text-align: left;
     font-size: 18px;
     padding-top: 2px;
     align-self: start;
   }
-  .menu-row--img .menu-row-desc {
-    margin-top: 4px;
-  }
+  .menu-row--img .menu-row-desc { margin-top: 4px; }
 }
 .menu-tag {
   font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.2em;
@@ -785,8 +786,6 @@ body.dark .nav-mobile-links a { border-bottom-color: rgba(243,237,225,0.13); }
   color: var(--ink);
 }
 .menu-tag.fire { border-color: var(--ember); color: var(--ember); }
-.menu-tag.veg { border-color: #4A6B2A; color: #4A6B2A; }
-.menu-tag.new { background: var(--ember); color: var(--cream); border-color: var(--ember); }
 
 @media (max-width: 820px) {
   .menu-grid { grid-template-columns: 1fr; gap: 0; }
@@ -922,7 +921,6 @@ body.dark .nav-mobile-links a { border-bottom-color: rgba(243,237,225,0.13); }
 .cal-day.disabled { color: rgba(26,20,16,0.25); cursor: not-allowed; }
 .cal-day.today { border-color: var(--ink); }
 .cal-day.active { background: var(--ember); color: var(--cream); border-color: var(--ember); }
-.cal-day.soldout { color: rgba(26,20,16,0.35); text-decoration: line-through; cursor: not-allowed; }
 
 .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .cal-month {
@@ -961,17 +959,6 @@ body.dark .nav-mobile-links a { border-bottom-color: rgba(243,237,225,0.13); }
 .res-input:focus { border-color: var(--ember); }
 .res-input.italic { font-family: var(--font-body); font-style: italic; }
 .res-input.mono { font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.1em; }
-
-.res-summary {
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(26,20,16,0.2);
-  font-family: var(--font-body); font-style: italic;
-  font-size: 17px;
-  color: var(--ink-2);
-  min-height: 26px;
-}
-.res-summary strong { color: var(--ember); font-style: normal; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
 
 .res-success {
   background: var(--paper); padding: 40px;
@@ -1545,10 +1532,10 @@ body.dark .nav-mobile-links a { border-bottom-color: rgba(243,237,225,0.13); }
 ::-webkit-scrollbar-thumb:hover { background: var(--ember); }
 
 /* =========================================================
-   LEGACY TAILWIND COMPAT (admin + secondary pages)
+   UTILIDADES PESO TIPOGRÁFICO
+   (usadas en hero "Pa<lacio>" para alternancia regular/light)
    ========================================================= */
 .w-light { font-weight: 300; }
-.w-semi { font-weight: 500; }
 
 /* =========================================================
    ACCESIBILIDAD
@@ -1842,7 +1829,10 @@ body.dark .res-card { background: var(--paper-3); color: var(--ink); border-colo
   color: var(--ember);
 }
 
-/* FAB carrito flotante — Liquid Glass (estilo Apple visionOS / iOS 26) */
+/* ─────────────────────────────────────────
+   FAB carrito flotante — Liquid Glass (estilo iOS / visionOS).
+   Solo visible <861px (en desktop el cart está al lado).
+───────────────────────────────────────── */
 .cart-fab {
   position: fixed;
   bottom: 20px;
@@ -1855,63 +1845,50 @@ body.dark .res-card { background: var(--paper-3); color: var(--ink); border-colo
   padding: 12px 18px 12px 14px;
 
   /* Cristal claro tipo iOS: tono crema translúcido */
-  background:
-    linear-gradient(180deg,
-      rgba(255, 250, 240, 0.62) 0%,
-      rgba(235, 227, 211, 0.55) 100%);
+  background: linear-gradient(180deg,
+    rgba(255, 250, 240, 0.62) 0%,
+    rgba(235, 227, 211, 0.55) 100%);
   -webkit-backdrop-filter: blur(28px) saturate(220%) brightness(1.04);
-  backdrop-filter: blur(28px) saturate(220%) brightness(1.04);
+  backdrop-filter:         blur(28px) saturate(220%) brightness(1.04);
 
   color: var(--ink);
   border: 0.5px solid rgba(255, 255, 255, 0.55);
   border-radius: 999px;
 
-  /* Multi-capa: sombra suave + highlight blanco arriba + leve depth abajo */
+  /* Sombra externa + highlight blanco arriba + leve depth abajo */
   box-shadow:
     0 18px 42px rgba(26, 20, 16, 0.18),
-    0 4px 12px rgba(26, 20, 16, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -1px 0 rgba(26, 20, 16, 0.08),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.25);
+    0  4px 12px rgba(26, 20, 16, 0.10),
+    inset 0  1px 0       rgba(255, 255, 255, 0.70),
+    inset 0 -1px 0       rgba(26,  20,  16,  0.08),
+    inset 0  0   0 0.5px rgba(255, 255, 255, 0.25);
 
   cursor: pointer;
   isolation: isolate;
   animation: cart-fab-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
-/* Especular: brillo superior tipo "lente" */
-.cart-fab::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.06) 22%,
-    rgba(255, 255, 255, 0) 50%
-  );
-  z-index: 0;
-}
-
-/* Refracción inferior: ligero brillo en el borde inferior */
+/* Pseudo-elementos: sheen superior + refracción inferior (efecto lente) */
+.cart-fab::before,
 .cart-fab::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    transparent 60%,
-    rgba(255, 255, 255, 0.10) 100%
-  );
   z-index: 0;
+}
+.cart-fab::before {
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 22%,
+    rgba(255, 255, 255, 0)    50%);
+}
+.cart-fab::after {
+  background: linear-gradient(180deg,
+    transparent              60%,
+    rgba(255, 255, 255, 0.10) 100%);
 }
 
 /* Hijos por encima de los pseudo-elementos */
@@ -1920,78 +1897,24 @@ body.dark .res-card { background: var(--paper-3); color: var(--ink); border-colo
   z-index: 1;
 }
 
+/* Estados hover/active */
 .cart-fab:hover {
   transform: translateX(-50%) translateY(-2px);
   box-shadow:
     0 22px 48px rgba(26, 20, 16, 0.22),
-    0 6px 14px rgba(26, 20, 16, 0.13),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 0 rgba(26, 20, 16, 0.10),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.35);
+    0  6px 14px rgba(26, 20, 16, 0.13),
+    inset 0  1px 0       rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0       rgba(26,  20,  16,  0.10),
+    inset 0  0   0 0.5px rgba(255, 255, 255, 0.35);
 }
 .cart-fab:active {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Fallback si no hay backdrop-filter */
-@supports not (backdrop-filter: blur(1px)) {
-  .cart-fab { background: rgba(243, 237, 225, 0.96); }
-}
-
-/* Modo noche: cristal oscuro */
-body.dark .cart-fab {
-  background:
-    linear-gradient(180deg,
-      rgba(60, 44, 36, 0.34) 0%,
-      rgba(22, 16, 12, 0.42) 100%);
-  color: var(--paper);
-  border: 0.5px solid rgba(255, 255, 255, 0.16);
-  box-shadow:
-    0 18px 42px rgba(0, 0, 0, 0.45),
-    0 4px 12px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.30),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.05);
-}
-body.dark .cart-fab::before {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.06) 22%,
-    rgba(255, 255, 255, 0) 50%
-  );
-}
-body.dark .cart-fab::after {
-  background: linear-gradient(
-    180deg,
-    transparent 60%,
-    rgba(255, 255, 255, 0.10) 100%
-  );
-}
-body.dark .cart-fab:hover {
-  box-shadow:
-    0 22px 48px rgba(0, 0, 0, 0.55),
-    0 6px 14px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.32),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.34),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
-}
-body.dark .cart-fab-label { color: var(--gold-2); }
-body.dark .cart-fab-total { color: #F3EDE1; }
-body.dark .cart-fab-arrow { color: #F3EDE1; }
-body.dark .cart-fab-count {
-  background: var(--paper);
-  color: var(--ink);
-  border-color: var(--paper);
-}
-@supports not (backdrop-filter: blur(1px)) {
-  body.dark .cart-fab { background: rgba(20, 14, 10, 0.94); }
-}
+/* Inner: icono ember con badge de cantidad */
 .cart-fab-icon {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   width: 36px; height: 36px;
   background: var(--ember);
   border-radius: 50%;
@@ -2007,13 +1930,12 @@ body.dark .cart-fab-count {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 10px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
   border: 1.5px solid var(--ink);
 }
+
+/* Inner: texto stack (label + total) */
 .cart-fab-text {
   display: flex;
   flex-direction: column;
@@ -2022,8 +1944,7 @@ body.dark .cart-fab-count {
 }
 .cart-fab-label {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-size: 9px; letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-2);
 }
@@ -2041,6 +1962,45 @@ body.dark .cart-fab-count {
   margin-left: 2px;
 }
 
+/* Fallback si no hay backdrop-filter (older browsers) */
+@supports not (backdrop-filter: blur(1px)) {
+  .cart-fab { background: rgba(243, 237, 225, 0.96); }
+}
+
+/* Modo noche: cristal oscuro */
+body.dark .cart-fab {
+  background: linear-gradient(180deg,
+    rgba(60, 44, 36, 0.34) 0%,
+    rgba(22, 16, 12, 0.42) 100%);
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.45),
+    0  4px 12px rgba(0, 0, 0, 0.22),
+    inset 0  1px 0       rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0       rgba(0,   0,   0,   0.30),
+    inset 0  0   0 0.5px rgba(255, 255, 255, 0.05);
+}
+body.dark .cart-fab:hover {
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.55),
+    0  6px 14px rgba(0, 0, 0, 0.28),
+    inset 0  1px 0       rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0       rgba(0,   0,   0,   0.34),
+    inset 0  0   0 0.5px rgba(255, 255, 255, 0.08);
+}
+body.dark .cart-fab-label { color: var(--gold-2); }
+body.dark .cart-fab-total { color: #F3EDE1; }
+body.dark .cart-fab-arrow { color: #F3EDE1; }
+body.dark .cart-fab-count {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  body.dark .cart-fab { background: rgba(20, 14, 10, 0.94); }
+}
+
 @keyframes cart-fab-in {
   from { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.9); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1); }
@@ -2051,8 +2011,6 @@ body.dark .cart-fab-count {
   /* En desktop el cart está siempre visible al lado, no hace falta FAB */
   .cart-fab { display: none; }
 }
-
-body.dark .footer { background: var(--paper); }
 
 /* =========================================================
    COOKIE CONSENT BANNER
